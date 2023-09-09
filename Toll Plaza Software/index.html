@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toll Software-Navayuga Infrastructure</title>
+    <link rel="stylesheet" href="../Toll Plaza software/toll.css">
+    <script> 
+     function populateData(){
+            $("tBlRecords").innerHTML="<tr><th>EmpId</th><th>EmpName</th><th>Option</th></tr>";
+            //     const records = empRepo.getAllEmployee();
+            //    for(let e of records) {
+            //     const row = `<tr><td>${e.empId}</td><td>${e.empName}</td><td><a href="#" onclick ="getDetails(${e.empId})">Edit</a><a href="#" onclick ="onDelete(${e.empId})">X</a></td></tr>`
+            //     $('tBlRecords').innerHTML+=row;
+               }
+    
+    </script>
+</head>
+<body>
+    <header>
+        <h1>Toll Plaza Navayuha Infrastructur</h1>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="../Toll Plaza software/index.html">Home</a></li>
+            <li><a href="../Toll Plaza software/Vehical_info.html">Vehical_Info</a></li>
+            <li><a href="#">Vehical_Details</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div>
+            <h2>Vehical Details</h2>
+            <hr>
+            <label>search</label>
+            <input class="search" type="search" placeholder="Enter Name" type="text" id="txtSearch">
+            <table border="1" width="100%" id ="tBlRecords">
+       
+            </table>
+        </div>
+    </main>
+</body>
+</html>
