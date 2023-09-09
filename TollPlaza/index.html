@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vehical Toll Plaza</title>
+    <script src="../TollGate/lib/jquery.min.js"></script>
+    <script src="../toll.js"></script>
+    <script src="../Js/Util.js"></script>
+    <link rel="stylesheet" href="../CSS/MainStyle.css">
+    <script>
+        const mgrObj = new VehicalManager();
+        function getRecord(id) {
+            $("div").fadeOut(10);
+            $("div:eq(2)").fadeIn(2000);
+            let record = mgrObj.getAllVehical().find((e) => e.id == id);
+            if (record != null) {
+                $("#txtId").val(record.id);
+                $("#txtDesc").val(record.detail);
+                document.getElementById("txtDate").valueAsDate = new Date(record.date);
+                $("#txtAmount").val((record.amount));
+                $("#slCategory").val(record.category);
+            }
+        }
+        function populate(records) {
+            $("table").find("tr:gt(0)").remove();
+            for (const rec of records) {
+                const tr = `<tr><td>${rec.id}</td>
+                            <td>${rec.detail}</td>
+                            <td>${rec.date}</td>
+                            <td>${rec.amount}</td>
+                            <td>${rec.category}</td>
+                            <td><a href="#" onclick="getRecord(${rec.id})">Edit</td>
+                            <td><a href="#" onclick="deleteRecord(${rec.id})">Delete</td>
+                            </tr>`;
+                $("table").append(tr);
+            }
+        }
+        function onAddFeature() {
+            const id = Number($("#txtNewId").val());
+            const detail = $("#txtNewDescription").val();
+            const date = new Date($("#txtNewDate").val());
+            const amount = Number($("#txtNewAmount").val());
+            const category = $("#slNewCategory").val();
+            const expense = new Vehical(id, detail, date, amount, category);
+            mgrObj.addNewVehical(expense);
+            alert("Vehical added successfully");
+            $("div").fadeOut(1000);
+            $("div:first").fadeIn(200);
+            populate(mgrObj.getAllVehical());
+        }
+        function onUpdateFeature() {
+            const id = Number($("#txtId").val());
+            const detail = $("#txtDesc").val();
+            const date = new Date($("#txtDate").val());
+            const amount = Number($("#txtAmount").val());
+            const category = $("#slCategory").val();
+            const expense = new Vehical(id, detail, date, amount, category);
+            try {
+                mgrObj.updateVehical(id, expense);
+                alert("Vehical updated successfully");
+                $("div").fadeOut(2000);
+            } catch (err) {
+                alert(err);
+            }
+            $("div:first").fadeIn(2500);
+            populate(mgrObj.getAllVehical());
+        }
+
+        function getVehicalsByCategory() {
+            var cats = prompt("Enter the Vehicaltype to search vehical");
+            let records = mgrObj.findVehicalByCategory(cats);
+            populate(records);
+        }
+        function getVehicalsByDate() {
+            var datenow = prompt("Enter the date to search");
+            let records = mgrObj.findVehicalByCategory(new Date(datenow));
+            populate(records);
+        }
+        const eventMapping = () => {
+            $("div").fadeOut(1);
+            $("li>a:first").click(() => {
+                $("div").fadeOut(1000);
+                $("div:first").fadeIn(1000);
+                populate(mgrObj.getAllVehical());
+            })
+            $("li>a:eq(1)").click(() => {
+                $("div").fadeOut(1000);
+                $("div:eq(1)").fadeIn(1000);
+            })
+            $("li>a:eq(2)").click(() => {
+                $("div").fadeOut(1000);
+                $("div:first").fadeIn(1000);
+                getVehicalsByDate();
+            })
+            $("li>a:eq(3)").click(() => {
+                $("div").fadeOut(1000);
+                $("div:first").fadeIn(1000);
+                getVehicalsByCategory();
+            })
+            $("li>a:last").click(() => {
+                $("div").fadeOut(1000);
+                $("div:last").fadeIn(1000);
+            })
+            $("button:first").click(onAddFeature);
+            $("button:eq(1)").click(onUpdateFeature);
+        }
+        $keypress('txtSearch'),()=> {
+            $("tBlRecords").innerHTML="<tr><th>Vehical_No</th><th>User_Name</th><th>location</th><th>VehicalType</th><th>amount</th></tr>";
+            console.log($("txtSearch").value);
+                const records = empRepo.getVehById($("txtSearch").value);
+                console.log(records);
+               for(let e of records) {
+                const row = `<tr><td>${e.vehno}</td><td>${e.name}</td><td><a href="#" onclick ="getDetails(${e.vehno    })">Edit</a><a href="#" onclick ="onDelete(${e.vehno})">X</a></td></tr>`
+                $('tBlRecords').innerHTML+=row;
+               }
+            }
+        $().ready(() => {
+            eventMapping();
+        })
+    </script>
+    <style>
+        li {
+            margin: 15px 0;
+            display: inline;
+        }
+        div {
+            height: 450px;
+        }
+    </style>
+</head>
+<body>
+    <h1> Toll Plaza Softare</h1>
+    <hr>
+    <nav>
+        <ul style="list-style-type: none;">
+            <li><a href="#">Statistics</a></li>
+            <li><a href="#">Add New Vehical</a></li>
+            <li><a href="#">Find By Date</a></li>
+            <li><a href="#">Find By Category</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
+    </nav>
+    <div>
+        <h2>List Of Vehical</h2>
+        <label>search</label>
+        <input class="search" type="search" placeholder="Enter Name" type="text" id="txtSearch"/>
+        <table border="1">
+            <tr>
+                <th>Vehical </th>
+                <th>Vehical Name</th>
+                <th>Vehical Date</th>
+                <th>Vehical Amount</th>
+                <th>Vehical Category</th>
+                <th>Options</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h2>Add New Vehicals</h2>
+
+        <hr>
+        <section>
+            <p>Enter the VId: <input type="text" id="txtNewId"></p>
+            <p>Enter the name: <input type="text" id="txtNewDescription" maxlength="20" minlength="2"></p>
+            <p>Enter the Date: <input type="date" id="txtNewDate"></p>
+            <p>Enter the Amount: <input type="number" id="txtNewAmount"></p>
+            <p>Select the Category:
+                <select id="slNewCategory">
+                    <option value="88">Bike</option>
+                    <option value="100">Car</option>
+                    <option value="200">Bus</option>
+                    <option value="100">Truc</option>
+                </select>
+            </p>
+            <p>
+                <button>Add Vehical</button>
+            </p>
+        </section>
+    </div>
+    <div>
+        <h2>Update Vehical Details</h2>
+        <hr>
+        <section>
+            <p>Enter the Vid: <input type="text" disabled id="txtId" /></p>
+            <p>Enter the Name: <input type="text" id="txtDesc" maxlength="20" minlength="2" /></p>
+            <p>Enter the Date: <input type="date" id="txtDate" /></p>
+            <p>Enter the Amount: <input type="number" id="txtAmount" /></p>
+            <p>Select the Category:
+                <select id="slCategory">
+                    <option value="100" >Bike</option>
+                    <option value="200">Car</option>
+                    <option value="150">Bus</option>
+                    <option value="111">Auto</option>
+                </select>
+            </p>
+            <p>
+                <button> Update Vehical</button>
+            </p>
+        </section>
+    </div>
+    <div>
+        <h2>About Us</h2>
+    </div>
+</body>
+</html>
